@@ -34,6 +34,7 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
         if(reg.estadoOrigem[0] != INDICA_REMOVIDO)
         {
             inserenografo(reg, grafo);
+            print_reg(RRN, &reg);
         }
         limpa_reg(&reg);
     }
