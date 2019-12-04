@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include "constants.h"
-#include "grafo.cpp"
+#include "functions.h"
+#include "grafo.h"
 
 using namespace std;
 

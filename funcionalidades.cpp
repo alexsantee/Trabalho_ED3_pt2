@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 #include "constants.h"
-#include "functions.cpp"
-#include "grafo.cpp"
+#include "functions.h"
+#include "funcionalidades.h"
+#include "grafo.h"
 
 using namespace std;
 

@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 #include "constants.h"
-#include "functions.cpp"
-#include "funcionalidades.cpp"
-#include "grafo.cpp"
+#include "functions.h"
+#include "funcionalidades.h"
+#include "grafo.h"
 
 int main()
 {
