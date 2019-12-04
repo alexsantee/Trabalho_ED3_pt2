@@ -63,6 +63,8 @@ void limpa_reg(struct registro *reg)
 void inserenografo(struct registro reg, struct grafo * grafo)
 {
     int i = 0;
+    bool achouorig = false;
+    bool achoudest = false;
     for(struct vertice v : grafo->vertices) //Iterador percorre o vetor de vertices do grafo procurando por um vertice com a mesma cidade origem do reg
     {
         if(v.cidadeOrigem.compare(reg.cidadeOrigem) == 0)   //Compara cidade origem do reg com cidade origem do vertice
@@ -74,23 +76,60 @@ void inserenografo(struct registro reg, struct grafo * grafo)
             a.tempo = reg.tempoViagem;
             grafo->vertices.at(i).arestas.push_back(a);     //insere aresta no vertice correspondente
             sort(grafo->vertices.at(i).arestas.begin(), grafo->vertices.at(i).arestas.end(), isALess);  //ordena vetor de arestas por ordem alfabética
-            return;
+            achouorig = true;
+            break;
         }
         i++;
     }                                       //Caso não encontre nenhum vertice de mesmo nome é necessario criar novo vertice
-    struct aresta a;                        //Cria nova aresta e preenche com os dados do registro
-    a.cidadeDestino = reg.cidadeDestino;
-    a.distancia = reg.distancia;
-    a.estadoDestino = reg.estadoDestino;
-    a.tempo = reg.tempoViagem;
-    struct vertice v;                       //Cria novo vertice e preenche com os dados do registro
-    v.cidadeOrigem = reg.cidadeOrigem;
-    v.estadoOrigem = reg.estadoOrigem;
-    v.arestas.push_back(a);                 //Insere aresta no vertice criado
-    sort(v.arestas.begin(), v.arestas.end(), isALess);
-    grafo->vertices.push_back(v);           //Insere vertice no vetor de vertices do grafo
-    sort(grafo->vertices.begin(), grafo->vertices.end(), isVLess);   //Ordena vetor de vertices do grafo
-    return;
+    if(!achouorig)
+    {
+        struct aresta a;                        //Cria nova aresta e preenche com os dados do registro
+        a.cidadeDestino = reg.cidadeDestino;
+        a.distancia = reg.distancia;
+        a.estadoDestino = reg.estadoDestino;
+        a.tempo = reg.tempoViagem;
+        struct vertice v;                       //Cria novo vertice e preenche com os dados do registro
+        v.cidadeOrigem = reg.cidadeOrigem;
+        v.estadoOrigem = reg.estadoOrigem;
+        v.arestas.push_back(a);                 //Insere aresta no vertice criado
+        sort(v.arestas.begin(), v.arestas.end(), isALess);
+        grafo->vertices.push_back(v);           //Insere vertice no vetor de vertices do grafo
+        sort(grafo->vertices.begin(), grafo->vertices.end(), isVLess);   //Ordena vetor de vertices do grafo
+    }
+
+    i = 0;
+    for(struct vertice v : grafo->vertices)
+    {
+        if(v.cidadeOrigem.compare(reg.cidadeDestino) == 0)
+        {
+            struct aresta a;
+            a.cidadeDestino = reg.cidadeOrigem;
+            a.distancia = reg.distancia;
+            a.estadoDestino = reg.estadoOrigem;
+            a.tempo = reg.tempoViagem;
+            grafo->vertices.at(i).arestas.push_back(a);     //insere aresta no vertice correspondente
+            sort(grafo->vertices.at(i).arestas.begin(), grafo->vertices.at(i).arestas.end(), isALess);  //ordena vetor de arestas por ordem alfabética
+            achoudest = true;
+            break;
+        }
+        i++;
+    }
+
+    if(!achoudest)
+    {
+        struct aresta a;
+        a.cidadeDestino = reg.cidadeOrigem;
+        a.distancia = reg.distancia;
+        a.estadoDestino = reg.estadoOrigem;
+        a.tempo = reg.tempoViagem;
+        struct vertice v;
+        v.cidadeOrigem = reg.cidadeDestino;
+        v.estadoOrigem = reg.estadoDestino;
+        v.arestas.push_back(a);                 //Insere aresta no vertice criado
+        sort(v.arestas.begin(), v.arestas.end(), isALess);
+        grafo->vertices.push_back(v);           //Insere vertice no vetor de vertices do grafo
+        sort(grafo->vertices.begin(), grafo->vertices.end(), isVLess);   //Ordena vetor de vertices do grafo
+    }
 }
 
 void print_grafo(struct grafo grafo)
