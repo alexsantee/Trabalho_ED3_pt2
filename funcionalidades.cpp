@@ -44,7 +44,27 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
     }
 
     fclose(fp);
-    //Mostra grafo na tela
-    print_grafo(*grafo);
     return;
+}
+
+void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struct grafo *grafo)
+{
+    struct aresta dist[grafo->vertices.size()];
+    struct vertice ant[grafo->vertices.size()];
+    struct aresta menor;
+    menor.distancia = 100000;
+    funcionalidade9(nomebin, grafo);
+    int i = 0;
+    for(vertice v : grafo->vertices)
+    {
+        if(v.cidadeOrigem == valorcampo)
+        {
+            for(aresta a : v.arestas)
+            {
+                if(a.distancia < menor.distancia)
+                    menor = a;
+            }
+        }
+        i++;
+    }
 }
