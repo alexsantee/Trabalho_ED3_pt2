@@ -5,22 +5,29 @@
 
 using namespace std;
 
+//Le um registro a partir de um binario e guarda em reg
 int leregbin(FILE *fp, struct registro * reg)
 {
     char c = SEPARADOR_REGISTRO;
     int i = 0;
 
+    //Percorre lixo da memoria
     while(c == SEPARADOR_REGISTRO)
         if(fread(&c, sizeof(char), 1, fp) == 0)
             return 0;
 
+    //Le campos de tamanho fixo
+    //estado de origem
     reg->estadoOrigem[0] = c;
     fread(&(reg->estadoOrigem[1]), sizeof(char), 1, fp);
     reg->estadoOrigem[2] = '\0';
+    //estado de destino
     fread(reg->estadoDestino, sizeof(char), 2, fp);
     reg->estadoDestino[2] = '\0';
     fread(&(reg->distancia), sizeof(int), 1, fp);
 
+    //Le campos de tamanho variavel
+    //cidade de origem
     fread(&c, sizeof(char), 1, fp);
     while (c != SEPARADOR_CAMPO)
     {
@@ -29,6 +36,7 @@ int leregbin(FILE *fp, struct registro * reg)
         i++;
     }
     reg->cidadeOrigem[i] = '\0';
+    //cidade de destino
     i = 0;
     fread(&c, sizeof(char), 1, fp);
     while (c != SEPARADOR_CAMPO)
@@ -38,6 +46,7 @@ int leregbin(FILE *fp, struct registro * reg)
         i++;
     }
     reg->cidadeDestino[i]='\0';
+    //tempo de viagem
     i = 0;
     fread(&c, sizeof(char), 1, fp);
     while(c != SEPARADOR_CAMPO)
@@ -47,9 +56,11 @@ int leregbin(FILE *fp, struct registro * reg)
         i++;
     }
     reg->tempoViagem[i] = '\0';
+
     return 1;
 }
 
+//zera todo o struct registro para reuso
 void limpa_reg(struct registro *reg)
 {
     strcpy(reg->estadoOrigem,"");
@@ -60,62 +71,67 @@ void limpa_reg(struct registro *reg)
     strcpy(reg->tempoViagem,"");
 }
 
+
 void inserenografo(struct registro reg, struct grafo * grafo)
 {
-    int i = 0;
-    bool achouorig = false;
-    bool achoudest = false;
-    for(struct vertice v : grafo->vertices) //Iterador percorre o vetor de vertices do grafo procurando por um vertice com a mesma cidade origem do reg
+    bool achou_orig = false;
+    bool achou_dest = false;
+    //Iterador percorre o vetor de vertices do grafo procurando por um vertice com a mesma cidade origem do reg
+    for(struct vertice v : grafo->vertices) 
     {
-        if(v.cidadeOrigem.compare(reg.cidadeOrigem) == 0)   //Compara cidade origem do reg com cidade origem do vertice
+        if(v.cidadeOrigem == reg.cidadeOrigem)   //Compara cidade origem do reg com cidade origem do vertice
         {                                                   //Se encontrou
             struct aresta a;                                //Cria nova aresta e preenche com os dados do registro    
             a.cidadeDestino = reg.cidadeDestino;
             a.distancia = reg.distancia;
             a.estadoDestino = reg.estadoDestino;
             a.tempo = reg.tempoViagem;
-            grafo->vertices.at(i).arestas.push_back(a);     //insere aresta no vertice correspondente
-            sort(grafo->vertices.at(i).arestas.begin(), grafo->vertices.at(i).arestas.end(), isALess);  //ordena vetor de arestas por ordem alfabética
-            achouorig = true;
+            v.arestas.push_back(a);     //insere aresta no vertice correspondente
+            sort(v.arestas.begin(), v.arestas.end());  //ordena vetor de arestas por ordem alfabética
+            achou_orig = true;
             break;
         }
-        i++;
-    }                                       //Caso não encontre nenhum vertice de mesmo nome é necessario criar novo vertice
-    if(!achouorig)
+    }
+
+    //Caso não encontre nenhum vertice de mesmo nome é necessario criar novo vertice
+    if(!achou_orig)
     {
-        struct aresta a;                        //Cria nova aresta e preenche com os dados do registro
+        //Cria nova aresta e preenche com os dados do registro
+        struct aresta a;                   
         a.cidadeDestino = reg.cidadeDestino;
         a.distancia = reg.distancia;
         a.estadoDestino = reg.estadoDestino;
         a.tempo = reg.tempoViagem;
-        struct vertice v;                       //Cria novo vertice e preenche com os dados do registro
+        //Cria novo vertice e preenche com os dados do registro
+        struct vertice v;
         v.cidadeOrigem = reg.cidadeOrigem;
         v.estadoOrigem = reg.estadoOrigem;
-        v.arestas.push_back(a);                 //Insere aresta no vertice criado
-        sort(v.arestas.begin(), v.arestas.end(), isALess);
-        grafo->vertices.push_back(v);           //Insere vertice no vetor de vertices do grafo
-        sort(grafo->vertices.begin(), grafo->vertices.end(), isVLess);   //Ordena vetor de vertices do grafo
+        //Insere aresta no vertice criado
+        v.arestas.push_back(a);
+        sort(v.arestas.begin(), v.arestas.end());
+        //Insere vertice no vetor de vertices do grafo
+        grafo->vertices.push_back(v);
+        sort(grafo->vertices.begin(), grafo->vertices.end());   //Ordena vetor de vertices do grafo
     }
 
-    i = 0;
+    //Insere aresta simetrica - CTRL+C CTRL+V de codigo!!!
     for(struct vertice v : grafo->vertices)
     {
-        if(v.cidadeOrigem.compare(reg.cidadeDestino) == 0)
+        if(v.cidadeOrigem == reg.cidadeDestino)
         {
             struct aresta a;
             a.cidadeDestino = reg.cidadeOrigem;
             a.distancia = reg.distancia;
             a.estadoDestino = reg.estadoOrigem;
             a.tempo = reg.tempoViagem;
-            grafo->vertices.at(i).arestas.push_back(a);     //insere aresta no vertice correspondente
-            sort(grafo->vertices.at(i).arestas.begin(), grafo->vertices.at(i).arestas.end(), isALess);  //ordena vetor de arestas por ordem alfabética
-            achoudest = true;
+            v.arestas.push_back(a);     //insere aresta no vertice correspondente
+            sort(v.arestas.begin(), v.arestas.end(), isALess);  //ordena vetor de arestas por ordem alfabética
+            achou_dest = true;
             break;
         }
-        i++;
     }
 
-    if(!achoudest)
+    if(!achou_dest)
     {
         struct aresta a;
         a.cidadeDestino = reg.cidadeOrigem;
@@ -134,21 +150,32 @@ void inserenografo(struct registro reg, struct grafo * grafo)
 
 void print_grafo(struct grafo grafo)
 {
-    for(struct vertice v : grafo.vertices)  //Iterador que percorre vetor de vertices do grafo
+	//Iterador que percorre vetor de vertices do grafo
+    for(struct vertice v : grafo.vertices)
     {
-        printf("%s %s", v.cidadeOrigem.c_str(), v.estadoOrigem.c_str());    //Printa cidade origem e estado origem do vertice
-        for(struct aresta a : v.arestas)    //Iterador que percorre vetor de arestas do vertice
+		//Printa cidade origem e estado origem do vertice
+        cout << v.cidadeOrigem << " " << v.estadoOrigem;
+		//Iterador que percorre vetor de arestas do vertice
+        for(struct aresta a : v.arestas)
         {
             if(a.tempo.compare("\0") == 0)
-                printf(" %s %s %d", a.cidadeDestino.c_str(), a.estadoDestino.c_str(), a.distancia);
+                cout << " " << a.cidadeDestino << " " << a.estadoDestino << " " << a.distancia;
             else
-                printf(" %s %s %d %s", a.cidadeDestino.c_str(), a.estadoDestino.c_str(), a.distancia, a.tempo.c_str()); //Printa cidade dest, estado dest, dist e tempo da aresta
+				//Printa cidade dest, estado dest, dist e tempo da aresta
+                cout << " " << a.cidadeDestino << " " << a.estadoDestino << " " << a.distancia << " " << a.tempo;
         }
-        printf("\n");   //Pula linha no fim do vetor de arestas;
+		//Pula linha no fim do vetor de arestas;
+        cout << endl;
     }
 }
 
 void print_reg(int RRN, struct registro *reg)
 {
-    printf("%d %s %s %d %s %s %s\n", RRN, reg->estadoOrigem, reg->estadoDestino, reg->distancia, reg->cidadeOrigem, reg->cidadeDestino, reg->tempoViagem);
+    cout << 
+    RRN << " " << 
+    reg->estadoOrigem << " " << reg->estadoDestino << " " <<
+    reg->distancia << " " << 
+    reg->cidadeOrigem << " " << reg->cidadeDestino << " " <<
+    reg->tempoViagem << 
+    endl;
 }

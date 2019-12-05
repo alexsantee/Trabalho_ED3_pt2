@@ -10,7 +10,7 @@ int main()
     string nomebin;
     struct grafo grafo;
 
-    scanf("%d", &op);
+    cin >> op;
 
     switch (op)
     {

@@ -6,28 +6,33 @@
 
 using namespace std;
 
+//Gera um grafo com base na leitura de um arquivo binario
+//recebe nome do arquivo e grafo em que registrar de entrada
 void funcionalidade9(string nomebin, struct grafo * grafo)
 {
     struct registro reg;
     struct cabecalho cab;
     FILE * fp = fopen(nomebin.c_str(), "rb");
+    //Abre o arquivo e verifica sua integridade
     if(fp == NULL)
     {
-        printf("Falha na execução da funcionalidade.\n");
+        cout << "Falha na execução da funcionalidade." << endl;
         return;
     }
 
     fread(&cab.status, sizeof(char), 1, fp);
     if(cab.status != '1')
     {
-        printf("Falha na execução da funcionalidade.\n");
+        cout << "Falha na execução da funcionalidade." << endl;
         return;
     }
     
+    //Registra metadados
     fread(&cab.numeroVertices, sizeof(int), 1, fp);
     fread(&cab.numeroArestas, sizeof(int), 1, fp);
     fread(cab.dataUltimaCompactacao, sizeof(char), 10, fp);
-
+    
+    //Insere no grafo caso nao marcado como removido
     int RRN;
     for(RRN = 0; leregbin(fp, &reg); RRN++)
     {
@@ -39,6 +44,7 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
     }
 
     fclose(fp);
+    //Mostra grafo na tela
     print_grafo(*grafo);
     return;
 }

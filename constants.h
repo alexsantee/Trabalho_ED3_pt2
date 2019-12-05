@@ -1,6 +1,8 @@
 #ifndef __CONSTANTS_H__
 #define __CONSTANTS_H__
 
+static const int infinito = 0x7fffffff;
+
 static const int ENCONTRADO = 0;
 static const int NAO_ENCONTRADO = -1;
 

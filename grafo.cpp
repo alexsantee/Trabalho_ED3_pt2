@@ -3,6 +3,7 @@
 
 using namespace std;
 
+//Verifica se cidade de origem vem primeiro em ordem alfabetica
 bool isVLess(struct vertice v1, struct vertice v2)
 {
     int x = v1.cidadeOrigem.compare(v2.cidadeOrigem);
@@ -13,6 +14,7 @@ bool isVLess(struct vertice v1, struct vertice v2)
         return false;
 }
 
+//Verifica se cidade de destino vem primeiro em ordem alfabetica
 bool isALess(struct aresta a1, struct aresta a2)
 {
     int x = a1.cidadeDestino.compare(a2.cidadeDestino);
