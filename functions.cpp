@@ -74,6 +74,7 @@ void limpa_reg(struct registro *reg)
 
 void inserenografo(struct registro reg, struct grafo * grafo)
 {
+    int i = 0;
     bool achou_orig = false;
     bool achou_dest = false;
     //Iterador percorre o vetor de vertices do grafo procurando por um vertice com a mesma cidade origem do reg
@@ -86,11 +87,12 @@ void inserenografo(struct registro reg, struct grafo * grafo)
             a.distancia = reg.distancia;
             a.estadoDestino = reg.estadoDestino;
             a.tempo = reg.tempoViagem;
-            v.arestas.push_back(a);     //insere aresta no vertice correspondente
-            sort(v.arestas.begin(), v.arestas.end());  //ordena vetor de arestas por ordem alfabética
+            grafo->vertices.at(i).arestas.push_back(a);     //insere aresta no vertice correspondente
+            sort(grafo->vertices.at(i).arestas.begin(), grafo->vertices.at(i).arestas.end());  //ordena vetor de arestas por ordem alfabética
             achou_orig = true;
             break;
         }
+        i++;
     }
 
     //Caso não encontre nenhum vertice de mesmo nome é necessario criar novo vertice
@@ -115,6 +117,7 @@ void inserenografo(struct registro reg, struct grafo * grafo)
     }
 
     //Insere aresta simetrica - CTRL+C CTRL+V de codigo!!!
+    i = 0;
     for(struct vertice v : grafo->vertices)
     {
         if(v.cidadeOrigem == reg.cidadeDestino)
@@ -124,11 +127,12 @@ void inserenografo(struct registro reg, struct grafo * grafo)
             a.distancia = reg.distancia;
             a.estadoDestino = reg.estadoOrigem;
             a.tempo = reg.tempoViagem;
-            v.arestas.push_back(a);     //insere aresta no vertice correspondente
-            sort(v.arestas.begin(), v.arestas.end(), isALess);  //ordena vetor de arestas por ordem alfabética
+            grafo->vertices.at(i).arestas.push_back(a);     //insere aresta no vertice correspondente
+            sort(grafo->vertices.at(i).arestas.begin(), grafo->vertices.at(i).arestas.end());  //ordena vetor de arestas por ordem alfabética
             achou_dest = true;
             break;
         }
+        i++;
     }
 
     if(!achou_dest)
