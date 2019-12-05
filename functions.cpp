@@ -183,3 +183,70 @@ void print_reg(int RRN, struct registro *reg)
     reg->tempoViagem << 
     endl;
 }
+
+//tipo auxiliar para uso no Dijkstra
+//guarda vertice, distancia e antecessor
+typedef tuple<vertice*,int,string> vd;
+
+//Calcula o menor caminho para todas as cidades a partir de uma origem
+//utiliza o algoritmo de Dijkstra na implementacao
+//recebe o grafo e o nome da cidade de origem e os enderecos de retorno
+//retorna por endereco um vetor com as distancias e o vetor de antecessores
+//retorna 0 em execucao correta e diferente em erro
+int menor_caminho(struct grafo *grafo, string cidadeOrigem,
+                    vector<int> *distancias, vector<vertice *> *antecessores){
+
+    //Verifica validade das entradas
+    if(grafo == NULL || distancias == NULL || antecessores == NULL){
+        //vetor nulo recebido
+        return 1;
+    } else if (cidadeOrigem.empty()){
+        //nome de origem vazio
+        return 2;
+    }
+
+    //Inicializa variaveis
+    set<vd> a_processar;
+    set<vd> processados;
+    distancias->clear();
+    antecessores->clear();
+
+    //Inicializa vertices a processar, junto com as distancias e antecessores
+    for(unsigned int i = 0; i < grafo->vertices.size(); i++){
+        vd v;
+        //A cidade de origem e inicializada com distancia 0
+        if(grafo->vertices[i].cidadeOrigem == cidadeOrigem){
+            v = vd(&(grafo->vertices[i]), 0, "");
+        }
+        //A cidade de destino e inicializaca com distancia infinita
+        else {
+            v = vd(&(grafo->vertices[i]), infinito, "");
+        }
+        a_processar.insert(v);
+    }
+    
+    //Enquanto houverem vertices a processar
+    while(!a_processar.empty()){
+
+        //Encontra vertice minimo
+        vd min = (*a_processar.begin());
+        for(vd v : a_processar){
+            if(v < min) min = v;
+        }
+        
+        //Retira-o da lista de vertices a processar
+        a_processar.erase(min);
+        processados.insert(min);
+
+        //Atualiza distancias dos vertices a processar
+        vector<aresta> arestas = (*get<0>(min)).arestas;
+        for(vector<aresta>::iterator it = arestas.begin(); it != arestas.end(); it++){
+
+        }
+    }
+    
+    //Coloca as variaveis de retorno
+    //vetor de distancias
+    //vetor de antecessores
+    return 0;
+}
