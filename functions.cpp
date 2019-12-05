@@ -187,6 +187,8 @@ void print_reg(int RRN, struct registro *reg)
 //tipo auxiliar para uso no Dijkstra
 //guarda vertice, distancia e antecessor
 typedef tuple<vertice*,int,string> vd;
+//Para usar no papa string->vertice
+typedef pair<string,vd> vmap;
 
 //Calcula o menor caminho para todas as cidades a partir de uma origem
 //utiliza o algoritmo de Dijkstra na implementacao
@@ -194,7 +196,7 @@ typedef tuple<vertice*,int,string> vd;
 //retorna por endereco um vetor com as distancias e o vetor de antecessores
 //retorna 0 em execucao correta e diferente em erro
 int menor_caminho(struct grafo *grafo, string cidadeOrigem,
-                    vector<int> *distancias, vector<vertice *> *antecessores){
+                    vector<int> *distancias, vector<string> *antecessores){
 
     //Verifica validade das entradas
     if(grafo == NULL || distancias == NULL || antecessores == NULL){
@@ -206,7 +208,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
     }
 
     //Inicializa variaveis
-    set<vd> a_processar;
+    map<string,vd> a_processar;
     set<vd> processados;
     distancias->clear();
     antecessores->clear();
@@ -214,6 +216,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
     //Inicializa vertices a processar, junto com as distancias e antecessores
     for(unsigned int i = 0; i < grafo->vertices.size(); i++){
         vd v;
+        string cidadeOrigem;
         //A cidade de origem e inicializada com distancia 0
         if(grafo->vertices[i].cidadeOrigem == cidadeOrigem){
             v = vd(&(grafo->vertices[i]), 0, "");
@@ -222,31 +225,46 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
         else {
             v = vd(&(grafo->vertices[i]), infinito, "");
         }
-        a_processar.insert(v);
+        cidadeOrigem = get<0>(v)->cidadeOrigem;
+        a_processar.insert(vmap(cidadeOrigem,v));
     }
     
     //Enquanto houverem vertices a processar
     while(!a_processar.empty()){
 
         //Encontra vertice minimo
-        vd min = (*a_processar.begin());
-        for(vd v : a_processar){
+        vmap min = (*a_processar.begin());
+        for(vmap v : a_processar){
             if(v < min) min = v;
         }
         
-        //Retira-o da lista de vertices a processar
-        a_processar.erase(min);
-        processados.insert(min);
+        //Retira o minimo da lista de vertices a processar
+        a_processar.erase(min.first);
+        processados.insert(min.second);
 
-        //Atualiza distancias dos vertices a processar
-        vector<aresta> arestas = (*get<0>(min)).arestas;
-        for(vector<aresta>::iterator it = arestas.begin(); it != arestas.end(); it++){
-
+        //Atualiza distancias dos vertices vizinhos a processar
+        for(aresta a : get<0>(min.second)->arestas){
+            //Se o vertice destino ainda falta processar
+            if(a_processar.find(a.cidadeDestino) != a_processar.end()){
+                int nova_distancia;
+                //nova_distancia = distancia ate min + min->v
+                nova_distancia = get<1>(min.second) + a.distancia;
+                if(nova_distancia < get<1>(a_processar.find(a.cidadeDestino)->second)){
+                    get<1>(a_processar.find(a.cidadeDestino)->second) = nova_distancia;
+                    get<2>(a_processar.find(a.cidadeDestino)->second) = min.first; 
+                }
+            }
         }
+
     }
     
     //Coloca as variaveis de retorno
-    //vetor de distancias
-    //vetor de antecessores
+    distancias->reserve(grafo->vertices.size());
+    antecessores->reserve(grafo->vertices.size());
+    for(vd v : processados){
+        distancias->push_back(get<1>(v));
+        antecessores->push_back(get<2>(v));
+    }
+
     return 0;
 }
