@@ -281,7 +281,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
     return 0;
 }
 
-/*grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
+grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 {
     struct registro reg;
     struct grafo *MST;
@@ -312,7 +312,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
                     dist = isAdj(v, u);
                     if(dist != -1)
                     {
-                        if(N.find(v) != N.end() && B.find(v) == B.end())
+                        if(N.find(u) != N.end() && B.find(u) == B.end())
                         {
                             if(min > dist)
                             {
@@ -329,9 +329,10 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
                                     strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
                                     strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
                                     strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                    reg.distancia = dist;                            
+                                    reg.distancia = dist;                    
                                 }
                                 n = v;
+                                min = dist;
                             }
                         }
                     }
@@ -342,7 +343,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
         inserenografo(reg, MST);
     }
     return MST;
-}*/
+}
 
 int isAdj(struct vertice v1, struct vertice v2)
 {
