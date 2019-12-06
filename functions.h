@@ -15,3 +15,7 @@ void print_reg(int RRN, struct registro *reg);
 int menor_caminho(struct grafo *grafo, string cidadeOrigem,
                     vector<int> *distancias, vector<string> *antecessores);
 
+grafo * arvore_geradora(struct grafo *grafo, string valorcampo);
+
+int isAdj(struct vertice v1, struct vertice v2);
+

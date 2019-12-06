@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <string.h>
 #include "constants.h"
 #include "functions.h"
 #include "grafo.h"
@@ -278,4 +279,78 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
     }
 
     return 0;
+}
+
+/*grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
+{
+    struct registro reg;
+    struct grafo *MST;
+    set<vertice> B, N;
+    for(vertice v : grafo->vertices)
+    {
+        if(v.cidadeOrigem == valorcampo)
+            B.insert(v);
+
+        N.insert(v);
+    }
+    if(B.empty())
+    {
+        cout << "Cidade inexistente." << endl;
+        return NULL;
+    }
+    while(B != N)
+    {
+        int dist;
+        int min = infinito;
+        struct vertice n;
+        for(vertice v : grafo->vertices)
+        {
+            if(B.find(v) != B.end())
+            {
+                for(vertice u : grafo->vertices)
+                {
+                    dist = isAdj(v, u);
+                    if(dist != -1)
+                    {
+                        if(N.find(v) != N.end() && B.find(v) == B.end())
+                        {
+                            if(min > dist)
+                            {
+                                if (isVLess(u,v))
+                                {
+                                    strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
+                                    strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
+                                    reg.distancia = dist;
+                                }else
+                                {
+                                    strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
+                                    strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
+                                    reg.distancia = dist;                            
+                                }
+                                n = v;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        B.insert(n);
+        inserenografo(reg, MST);
+    }
+    return MST;
+}*/
+
+int isAdj(struct vertice v1, struct vertice v2)
+{
+    for(aresta a : v1.arestas)
+    {
+        if(a.cidadeDestino == v2.cidadeOrigem)
+            return a.distancia;
+    }
+
+    return -1;
 }

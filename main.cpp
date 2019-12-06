@@ -30,6 +30,14 @@ int main()
         scan_quote_string(valorcampo);
         funcionalidade10(nomebin, nomecampo, valorcampo, &grafo);
         break;
+
+    /*case 11:
+        cin >> nomebin;
+        cin >> nomecampo;
+        scan_quote_string(valorcampo);
+        funcionalidade11(nomebin, nomecampo, valorcampo, &grafo);
+        break;*/
+
     default:
         break;
     }

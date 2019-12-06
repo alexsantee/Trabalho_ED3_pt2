@@ -64,3 +64,11 @@ void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struc
     cout << endl;
 
 }
+
+/*void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struct grafo *grafo)
+{
+    struct grafo * MST;
+    funcionalidade9(nomebin, grafo);
+    MST = arvore_geradora(grafo, valorcampo);
+    print_grafo(*MST);
+}*/
