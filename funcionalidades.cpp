@@ -53,4 +53,14 @@ void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struc
     vector <int> distancias;
     vector <string> antecessores;
     menor_caminho(grafo, valorcampo, &distancias, &antecessores);
+    //PRINT DE DEBUGGING-------------------------------------------------------
+    for(string s : antecessores){
+        cout << s << " ";
+    }
+    cout << endl;
+    for(int i : distancias){
+        cout << i << " ";
+    }
+    cout << endl;
+
 }
