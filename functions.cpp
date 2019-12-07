@@ -195,6 +195,12 @@ struct ordem_nome{
     }
 };
 
+struct ordem_V{
+    bool operator() (vertice v1, vertice v2) const{
+        return (v1.cidadeOrigem < v2.cidadeOrigem);
+    }
+};
+
 //Para usar no mapa nomeOrigem->vertice
 typedef pair<string,vd> vmap;
 
@@ -285,10 +291,10 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 {
     struct registro reg;
     struct grafo *MST;
-    set<vertice> B, N;
+    set<vertice, ordem_V> B, N;
     for(vertice v : grafo->vertices)
     {
-        if(v.cidadeOrigem == valorcampo)
+        if(v.cidadeOrigem.compare(valorcampo) == 0)
             B.insert(v);
 
         N.insert(v);
@@ -343,6 +349,27 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
         inserenografo(reg, MST);
     }
     return MST;
+}
+
+bool isSetEqual(set<vertice> a1, set<vertice> a2)
+{
+    bool achou = true;
+    for(vertice v : a1)
+    {
+        if(!achou)
+            return false;
+        achou = false;
+        for(vertice u : a2)
+        {
+            if(v.cidadeOrigem == u.cidadeOrigem)
+            {
+                achou = true;
+                break;
+            }
+        }
+    }
+
+    return true;
 }
 
 int isAdj(struct vertice v1, struct vertice v2)
