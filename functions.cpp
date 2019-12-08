@@ -290,7 +290,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
 grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 {
     struct registro reg;
-    struct grafo *MST;
+    struct grafo *MST = new struct grafo;
     set<vertice, ordem_V> B, N;
     for(vertice v : grafo->vertices)
     {
@@ -304,7 +304,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
         cout << "Cidade inexistente." << endl;
         return NULL;
     }
-    while(B != N)
+    while(!isSetEqual(B,N))
     {
         int dist;
         int min = infinito;
@@ -351,7 +351,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
     return MST;
 }
 
-bool isSetEqual(set<vertice> a1, set<vertice> a2)
+bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
 {
     bool achou = true;
     for(vertice v : a1)
