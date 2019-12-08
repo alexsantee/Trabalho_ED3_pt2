@@ -304,13 +304,13 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
         cout << "Cidade inexistente." << endl;
         return NULL;
     }
-    cout << "Passou as verificações" << endl;
+    
     while(!isSetEqual(N,B))
     {
         int dist;
         int min = infinito;
         struct vertice *n;
-        for(vertice v : grafo->vertices)
+        for(vertice v : B)
         {
             if(B.find(v) != B.end())
             {
@@ -319,10 +319,12 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                     dist = isAdj(v, u);
                     if(dist != -1)
                     {
-                        if(N.find(u) != N.end() && B.find(u) == B.end())
+                        if(B.find(u) == B.end())
                         {
                             if(min > dist)
                             {
+                                cout << "CHEGOU AQUI" << endl;
+                                limpa_reg(&reg);
                                 if (isVLess(u,v))
                                 {
                                     strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
@@ -336,9 +338,9 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                                     strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
                                     strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
                                     strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                    reg.distancia = dist;                    
+                                    reg.distancia = dist;            
                                 }
-                                n = &v;
+                                n = &u;
                                 min = dist;
                             }
                         }
@@ -347,6 +349,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
             }
         }
         B.insert(*n);
+        //N.erase(*n);
         inserenografo(reg, MST);
     }
     return MST;
@@ -357,7 +360,7 @@ bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
 
     cout << "Size a1 : " << a1.size() << endl;
     cout << "Size a2 : " << a2.size() << endl;
-    
+
     if(a1.size() != a2.size())
         return false;
 
