@@ -304,11 +304,12 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
         cout << "Cidade inexistente." << endl;
         return NULL;
     }
-    while(!isSetEqual(B,N))
+    cout << "Passou as verificações" << endl;
+    while(!isSetEqual(N,B))
     {
         int dist;
         int min = infinito;
-        struct vertice n;
+        struct vertice *n;
         for(vertice v : grafo->vertices)
         {
             if(B.find(v) != B.end())
@@ -337,7 +338,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                                     strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
                                     reg.distancia = dist;                    
                                 }
-                                n = v;
+                                n = &v;
                                 min = dist;
                             }
                         }
@@ -345,7 +346,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                 }
             }
         }
-        B.insert(n);
+        B.insert(*n);
         inserenografo(reg, MST);
     }
     return MST;
@@ -353,6 +354,13 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 
 bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
 {
+
+    cout << "Size a1 : " << a1.size() << endl;
+    cout << "Size a2 : " << a2.size() << endl;
+    
+    if(a1.size() != a2.size())
+        return false;
+
     bool achou = true;
     for(vertice v : a1)
     {
