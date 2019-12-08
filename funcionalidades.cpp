@@ -16,14 +16,14 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
     //Abre o arquivo e verifica sua integridade
     if(fp == NULL)
     {
-        cout << "Falha na execução da funcionalidade." << endl;
+        cout << "Falha na execução da funcionalidade.\n" << endl;
         return;
     }
 
     fread(&cab.status, sizeof(char), 1, fp);
     if(cab.status != '1')
     {
-        cout << "Falha na execução da funcionalidade." << endl;
+        cout << "Falha na execução da funcionalidade.\n" << endl;
         return;
     }
     
