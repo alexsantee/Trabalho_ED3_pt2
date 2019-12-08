@@ -61,9 +61,9 @@ void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struc
     //imprime saida
     //erros
     if(status == 1 || status == 2){
-        cout << "Falha na execução da funcionalidade." << endl;}
+        cout << "Falha na execução da funcionalidade." << endl; return;}
     else if(status == 3){
-        cout << "Cidade inexistente." << endl;}
+        cout << "Cidade inexistente." << endl; return;}
     //resultado
     else{   //status == 0(ok)
         vertice * v_org = NULL;     //origem do algoritmo
