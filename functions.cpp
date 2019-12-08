@@ -328,7 +328,6 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
         return NULL;
     }
 
-    cout << "Passou as verificações" << endl;
     //Enquanto B nao possui todos os vertices adiciona mais
     while(!isSetEqual(N,B))
     {
@@ -341,14 +340,13 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
         {
             for(vertice u : grafo->vertices)
             {
+                strcpy(tempo, "");
                 dist = isAdj(v, u, tempo);
                 if(dist != -1)
                 {
                     //se vertice a adicionar nao esta na arvore considera adicao
                     if(B.find(u) == B.end())
-                    {   cout << "RES COMP : " << (B.find(u) == B.end()) << endl;
-                        cout << "U == " << u.cidadeOrigem << endl;
-                        //se vertice novo eh menor substitui
+                    {    //se vertice novo eh menor substitui
                         if(min > dist)
                         {
                             limpa_reg(&reg);
@@ -366,6 +364,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                                 strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
                                 strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
                                 strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
+                                strcpy(reg.tempoViagem, tempo);
                                 reg.distancia = dist;                    
                             }
                             n = u;
@@ -383,11 +382,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 }
 
 bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
-{
-
-    cout << "Size a1 : " << a1.size() << endl;
-    cout << "Size a2 : " << a2.size() << endl;
-    
+{   
     if(a1.size() != a2.size())
         return false;
 
@@ -410,13 +405,13 @@ bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
     return true;
 }
 
-int isAdj(struct vertice v1, struct vertice v2, string *tempo)
+int isAdj(struct vertice v1, struct vertice v2, char * tempo)
 {
     for(aresta a : v1.arestas)
     {
         if(a.cidadeDestino == v2.cidadeOrigem)
         {
-            *tempo = a.tempo;
+            strcpy(tempo, a.tempo.c_str());
             return a.distancia;
         }
     }
