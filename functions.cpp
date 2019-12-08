@@ -337,7 +337,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 
         struct vertice *n;
         //busca menor aresta de vertice da arvore para vertice fora
-        for(vertice v : grafo->vertices)
+        for(vertice v : B)
         {
             for(vertice u : grafo->vertices)
             {
@@ -365,7 +365,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                                 strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
                                 reg.distancia = dist;                    
                             }
-                            n = &v;
+                            n = &u;
                             min = dist;
                         }
                     }
