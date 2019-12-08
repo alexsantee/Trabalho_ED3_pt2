@@ -316,29 +316,32 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
     while(!isSetEqual(N,B))
     {
         int dist;
+        char tempo[TAM_VAR] = "";
         int min = infinito;
-
-        struct vertice *n;
+        struct vertice n;
         //busca menor aresta de vertice da arvore para vertice fora
         for(vertice v : B)
         {
             for(vertice u : grafo->vertices)
             {
-                dist = isAdj(v, u);
+                dist = isAdj(v, u, tempo);
                 if(dist != -1)
                 {
                     //se vertice a adicionar nao esta na arvore considera adicao
                     if(B.find(u) == B.end())
-                    {   
+                    {   cout << "RES COMP : " << (B.find(u) == B.end()) << endl;
+                        cout << "U == " << u.cidadeOrigem << endl;
                         //se vertice novo eh menor substitui
                         if(min > dist)
                         {
+                            limpa_reg(&reg);
                             if (isVLess(u,v))
                             {
                                 strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
                                 strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
                                 strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
                                 strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
+                                strcpy(reg.tempoViagem, tempo);
                                 reg.distancia = dist;
                             }else
                             {
@@ -348,7 +351,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                                 strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
                                 reg.distancia = dist;                    
                             }
-                            n = &u;
+                            n = u;
                             min = dist;
                         }
                     }
@@ -356,7 +359,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
             }
         }
         //insere vertice mais proximo na arvore
-        B.insert(*n);
+        B.insert(n);
         inserenografo(reg, MST);
     }
     return MST;
@@ -390,12 +393,15 @@ bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
     return true;
 }
 
-int isAdj(struct vertice v1, struct vertice v2)
+int isAdj(struct vertice v1, struct vertice v2, string *tempo)
 {
     for(aresta a : v1.arestas)
     {
         if(a.cidadeDestino == v2.cidadeOrigem)
+        {
+            *tempo = a.tempo;
             return a.distancia;
+        }
     }
 
     return -1;

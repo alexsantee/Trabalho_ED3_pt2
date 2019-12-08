@@ -69,6 +69,7 @@ void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struc
 {
     struct grafo * MST;
     funcionalidade9(nomebin, grafo);
+    print_grafo(*grafo);
     MST = arvore_geradora(grafo, valorcampo);
     if(MST != NULL)
         print_grafo(*MST);
