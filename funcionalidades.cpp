@@ -23,7 +23,7 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
     fread(&cab.status, sizeof(char), 1, fp);
     if(cab.status != '1')
     {
-        cout << "Falha na execução da funcionalidade.\n" << endl;
+        cout << "Falha no carregamento do arquivo.\n" << endl;
         return;
     }
     
