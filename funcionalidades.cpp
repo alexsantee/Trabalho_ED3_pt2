@@ -16,7 +16,7 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
     //Abre o arquivo e verifica sua integridade
     if(fp == NULL)
     {
-        cout << "Falha na execução da funcionalidade.\n" << endl;
+        cout << "Falha no carregamento do arquivo.\n" << endl;
         return;
     }
 
