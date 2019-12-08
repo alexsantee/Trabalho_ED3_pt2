@@ -342,25 +342,13 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                                 reg.distancia = dist;
                             }else
                             {
-                                if (isVLess(u,v))
-                                {
-                                    strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
-                                    strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
-                                    reg.distancia = dist;
-                                }else
-                                {
-                                    strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
-                                    strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                    reg.distancia = dist;                    
-                                }
-                                n = &v;
-                                min = dist;
+                                strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
+                                strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
+                                strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
+                                strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
+                                reg.distancia = dist;                    
                             }
-                            n = v;
+                            n = &v;
                             min = dist;
                         }
                     }
