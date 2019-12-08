@@ -205,12 +205,6 @@ struct ordem_nome{
     }
 };
 
-struct ordem_V{
-    bool operator() (vertice v1, vertice v2) const{
-        return (v1.cidadeOrigem < v2.cidadeOrigem);
-    }
-};
-
 //Para usar no mapa nomeOrigem->vertice
 typedef pair<string,vd> vmap;
 
@@ -304,83 +298,65 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
     return 0;
 }
 
-grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
+typedef pair<string,int> imap;
+
+int arvore_geradora(struct grafo *grafo, string valorcampo, vector<int> *antecessores)
 {
-    struct registro reg;
-    struct grafo *MST = new struct grafo;
-    //B sao vertices da arvore minima e N sao todos os vertices
-    set<vertice, ordem_V> B, N;
-
-    //inicializa os conjuntos B e N
-    for(vertice v : grafo->vertices)
-    {
-        //B comeca apenas com o vertice de origem
-        if(v.cidadeOrigem.compare(valorcampo) == 0)
-            B.insert(v);
-        //N contem todos os vertices
-        N.insert(v);
+    //Prepara retorno do vetor de antecessores
+    antecessores->clear();
+    antecessores->reserve(grafo->vertices.size());
+    //Mapa de indices do vetor de adjacencias <nome do vertice,indice no vetor>
+    map<string,int> mapa_i;
+    for(unsigned int i = 0; i < grafo->vertices.size(); i++){
+        mapa_i.insert( imap(grafo->vertices[i].cidadeOrigem, i) );
     }
 
-    //se nao encontrou cidade de origem retorna erro
-    if(B.empty())
-    {
-        cout << "Cidade inexistente." << endl;
-        return NULL;
+    //B sao vertices da arvore minima
+    set<int> B;
+
+    //inicializa o conjunto B
+    map<string,int>::iterator it = mapa_i.find(valorcampo);
+    if(it != mapa_i.end()){   //cidade esta na lista
+        B.insert(it->second);
+        (*antecessores)[it->second] = -1;  //origem nao tem antecessor
+    }
+    else{
+        cout << "Cidade inexixstente." << endl;
+        return 1;
     }
 
-    //Enquanto B nao possui todos os vertices adiciona mais
-    while(!isSetEqual(N,B))
-    {
+    //Enquanto existem vertices fora da arvore insere mais
+    while(B.size() < grafo->vertices.size()){
+        string tempo;
         int dist;
-        char tempo[TAM_VAR] = "";
         int min = infinito;
-        struct vertice n;
-        //busca menor aresta de vertice da arvore para vertice fora
-        for(vertice v : B)
-        {
-            for(vertice u : grafo->vertices)
-            {
-                strcpy(tempo, "");
-                dist = isAdj(v, u, tempo);
-                if(dist != -1)
-                {
-                    //se vertice a adicionar nao esta na arvore considera adicao
-                    if(B.find(u) == B.end())
-                    {    //se vertice novo eh menor substitui
-                        if(min > dist)
-                        {
-                            limpa_reg(&reg);
-                            if (isVLess(u,v))
-                            {
-                                strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
-                                strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
-                                strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
-                                strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
-                                strcpy(reg.tempoViagem, tempo);
-                                reg.distancia = dist;
-                            }else
-                            {
-                                strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
-                                strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
-                                strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
-                                strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                strcpy(reg.tempoViagem, tempo);
-                                reg.distancia = dist;                    
-                            }
-                            n = u;
-                            min = dist;
-                        }
+        int origem, destino;
+        //para todo vertice da arvore atual
+        for(int i : B){
+            //procura menor aresta
+            for(aresta a : grafo->vertices[i].arestas){
+                tempo = a.tempo;
+                dist = a.distancia;
+                //se vertice a adicionar nao esta na arvore considera adicao
+                if(B.find(mapa_i[a.cidadeDestino]) == B.end()){
+                    //se aresta nova eh menor substitui
+                    if(dist < min){
+                        origem = i;
+                        destino = mapa_i[a.cidadeDestino];
+                        min = dist;
                     }
                 }
             }
         }
         //insere vertice mais proximo na arvore
-        B.insert(n);
-        inserenografo(reg, MST);
+        B.insert(destino);
+        (*antecessores)[destino] = origem;
     }
-    return MST;
+
+    return 0;
 }
 
+/*
 bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
 {   
     if(a1.size() != a2.size())
@@ -418,3 +394,4 @@ int isAdj(struct vertice v1, struct vertice v2, char * tempo)
 
     return -1;
 }
+*/

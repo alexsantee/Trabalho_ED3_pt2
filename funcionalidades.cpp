@@ -93,11 +93,13 @@ void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struc
 }
 
 void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struct grafo *grafo)
-{
-    struct grafo * MST;
+{   
+    //Le grafo do arquivo
     funcionalidade9(nomebin, grafo);
-    MST = arvore_geradora(grafo, valorcampo);
-    if(MST != NULL)
-        print_grafo(*MST);
-    else{cout << "NULL" << endl;}
+
+    vector<int> antecessores;
+    arvore_geradora(grafo, valorcampo, &antecessores);
+    for(int i : antecessores){
+    cout << i << endl;
+    }
 }
