@@ -291,60 +291,69 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 {
     struct registro reg;
     struct grafo *MST = new struct grafo;
+    //B sao vertices da arvore minima e N sao todos os vertices
     set<vertice, ordem_V> B, N;
+
+    //inicializa os conjuntos B e N
     for(vertice v : grafo->vertices)
     {
+        //B comeca apenas com o vertice de origem
         if(v.cidadeOrigem.compare(valorcampo) == 0)
             B.insert(v);
-
+        //N contem todos os vertices
         N.insert(v);
     }
+
+    //se nao encontrou cidade de origem retorna erro
     if(B.empty())
     {
         cout << "Cidade inexistente." << endl;
         return NULL;
     }
-    while(!isSetEqual(B,N))
+
+    //Enquanto B nao possui todos os vertices adiciona mais
+    while(!isSetEqual(N,B))
     {
         int dist;
         int min = infinito;
         struct vertice n;
-        for(vertice v : grafo->vertices)
+        //busca menor aresta de vertice da arvore para vertice fora
+        for(vertice v : B)
         {
-            if(B.find(v) != B.end())
+            for(vertice u : grafo->vertices)
             {
-                for(vertice u : grafo->vertices)
+                dist = isAdj(v, u);
+                if(dist != -1)
                 {
-                    dist = isAdj(v, u);
-                    if(dist != -1)
-                    {
-                        if(N.find(u) != N.end() && B.find(u) == B.end())
+                    //se vertice a adicionar nao esta na arvore considera adicao
+                    if(B.find(u) == B.end())
+                    {   
+                        //se vertice novo eh menor substitui
+                        if(min > dist)
                         {
-                            if(min > dist)
+                            if (isVLess(u,v))
                             {
-                                if (isVLess(u,v))
-                                {
-                                    strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
-                                    strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
-                                    reg.distancia = dist;
-                                }else
-                                {
-                                    strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
-                                    strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                    reg.distancia = dist;                    
-                                }
-                                n = v;
-                                min = dist;
+                                strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
+                                strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
+                                strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
+                                strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
+                                reg.distancia = dist;
+                            }else
+                            {
+                                strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
+                                strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
+                                strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
+                                strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
+                                reg.distancia = dist;                    
                             }
+                            n = v;
+                            min = dist;
                         }
                     }
                 }
             }
         }
+        //insere vertice mais proximo na arvore
         B.insert(n);
         inserenografo(reg, MST);
     }
