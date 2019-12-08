@@ -65,10 +65,12 @@ void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struc
 
 }
 
-/*void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struct grafo *grafo)
+void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struct grafo *grafo)
 {
     struct grafo * MST;
     funcionalidade9(nomebin, grafo);
     MST = arvore_geradora(grafo, valorcampo);
-    print_grafo(*MST);
-}*/
+    if(MST != NULL)
+        print_grafo(*MST);
+    else{cout << "NULL" << endl;}
+}

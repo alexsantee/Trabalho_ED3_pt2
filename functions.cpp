@@ -311,14 +311,16 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
         return NULL;
     }
 
+    cout << "Passou as verificações" << endl;
     //Enquanto B nao possui todos os vertices adiciona mais
     while(!isSetEqual(N,B))
     {
         int dist;
         int min = infinito;
-        struct vertice n;
+
+        struct vertice *n;
         //busca menor aresta de vertice da arvore para vertice fora
-        for(vertice v : B)
+        for(vertice v : grafo->vertices)
         {
             for(vertice u : grafo->vertices)
             {
@@ -340,11 +342,23 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                                 reg.distancia = dist;
                             }else
                             {
-                                strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
-                                strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
-                                strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
-                                strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                reg.distancia = dist;                    
+                                if (isVLess(u,v))
+                                {
+                                    strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
+                                    strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
+                                    reg.distancia = dist;
+                                }else
+                                {
+                                    strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
+                                    strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
+                                    reg.distancia = dist;                    
+                                }
+                                n = &v;
+                                min = dist;
                             }
                             n = v;
                             min = dist;
@@ -354,7 +368,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
             }
         }
         //insere vertice mais proximo na arvore
-        B.insert(n);
+        B.insert(*n);
         inserenografo(reg, MST);
     }
     return MST;
@@ -362,6 +376,13 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 
 bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
 {
+
+    cout << "Size a1 : " << a1.size() << endl;
+    cout << "Size a2 : " << a2.size() << endl;
+    
+    if(a1.size() != a2.size())
+        return false;
+
     bool achou = true;
     for(vertice v : a1)
     {
