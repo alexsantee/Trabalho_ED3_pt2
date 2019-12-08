@@ -1,3 +1,5 @@
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -21,3 +23,4 @@ bool isSetEqual(set<struct vertice, struct ordem_V> a1, set<struct vertice, stru
 
 int isAdj(struct vertice v1, struct vertice v2);
 
+#endif

@@ -1,3 +1,6 @@
+#ifndef GRAFO_H
+#define GRAFO_H
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -35,4 +38,4 @@ struct grafo{
     vector<vertice> vertices;
 };
 
-
+#endif
