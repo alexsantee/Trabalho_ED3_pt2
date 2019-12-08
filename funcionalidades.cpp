@@ -16,14 +16,14 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
     //Abre o arquivo e verifica sua integridade
     if(fp == NULL)
     {
-        cout << "Falha no carregamento do arquivo.\n" << endl;
+        cout << "Falha no carregamento do arquivo." << endl;
         return;
     }
 
     fread(&cab.status, sizeof(char), 1, fp);
     if(cab.status != '1')
     {
-        cout << "Falha no carregamento do arquivo.\n" << endl;
+        cout << "Falha no carregamento do arquivo." << endl;
         return;
     }
     
@@ -61,9 +61,9 @@ void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struc
     //imprime saida
     //erros
     if(status == 1 || status == 2){
-        cout << "Falha na execução da funcionalidade.";}
+        cout << "Falha na execução da funcionalidade." << endl;}
     else if(status == 3){
-        cout << "Cidade inexistente.";}
+        cout << "Cidade inexistente." << endl;}
     //resultado
     else{   //status == 0(ok)
         vertice * v_org = NULL;     //origem do algoritmo
@@ -71,7 +71,7 @@ void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struc
         vertice * v_ant = NULL;     //antecessor de atual
 
         v_org = procura_vertice(valorcampo, grafo);
-        if(v_org == NULL) {cout << "cidade de origem nao encontrada"; exit(1);}
+        if(v_org == NULL) {cout << "Cidade inexistente." << endl; exit(1);}
         //imprime cada vertice
         for(unsigned int i = 0; i<grafo->vertices.size(); i++){
             v_cur = &(grafo->vertices[i]);
