@@ -16,14 +16,14 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
     //Abre o arquivo e verifica sua integridade
     if(fp == NULL)
     {
-        cout << "Falha na execução da funcionalidade.\n" << endl;
+        cout << "Falha no carregamento do arquivo.\n" << endl;
         return;
     }
 
     fread(&cab.status, sizeof(char), 1, fp);
     if(cab.status != '1')
     {
-        cout << "Falha na execução da funcionalidade.\n" << endl;
+        cout << "Falha no carregamento do arquivo.\n" << endl;
         return;
     }
     
@@ -49,20 +49,47 @@ void funcionalidade9(string nomebin, struct grafo * grafo)
 
 void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struct grafo *grafo)
 {
+    //le grafo do arquivo
     funcionalidade9(nomebin, grafo);
+
+    //realiza algoritmo de Dijkstra
     vector <int> distancias;
     vector <string> antecessores;
-    menor_caminho(grafo, valorcampo, &distancias, &antecessores);
-    //PRINT DE DEBUGGING-------------------------------------------------------
-    for(string s : antecessores){
-        cout << s << " ";
-    }
-    cout << endl;
-    for(int i : distancias){
-        cout << i << " ";
-    }
-    cout << endl;
+    int status;
+    status = menor_caminho(grafo, valorcampo, &distancias, &antecessores);
 
+    //imprime saida
+    //erros
+    if(status == 1 || status == 2){
+        cout << "Falha na execução da funcionalidade.";}
+    else if(status == 3){
+        cout << "Cidade inexistente.";}
+    //resultado
+    else{   //status == 0(ok)
+        vertice * v_org = NULL;     //origem do algoritmo
+        vertice * v_cur = NULL;     //cidade atual da impressao
+        vertice * v_ant = NULL;     //antecessor de atual
+
+        v_org = procura_vertice(valorcampo, grafo);
+        if(v_org == NULL) {cout << "cidade de origem nao encontrada"; exit(1);}
+        //imprime cada vertice
+        for(unsigned int i = 0; i<grafo->vertices.size(); i++){
+            v_cur = &(grafo->vertices[i]);
+            v_ant = procura_vertice(antecessores[i], grafo);
+            if (v_ant != NULL){
+                cout <<
+                    v_org->cidadeOrigem << " " <<
+                    v_org->estadoOrigem << " " <<
+                    v_cur->cidadeOrigem << " " <<
+                    v_cur->estadoOrigem << " " <<
+                    distancias[i] << " " <<
+                    v_ant->cidadeOrigem << " " <<
+                    v_ant->estadoOrigem << endl;
+            }
+
+        }
+
+    }
 }
 
 void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struct grafo *grafo)

@@ -1,6 +1,8 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
+
 #include <bits/stdc++.h>
+#include "grafo.h"
 
 using namespace std;
 
@@ -13,6 +15,8 @@ void inserenografo(struct registro reg, struct grafo * grafo);
 void print_grafo(struct grafo grafo);
 
 void print_reg(int RRN, struct registro *reg);
+
+vertice *procura_vertice(string cidadeOrigem, grafo *grafo);
 
 int menor_caminho(struct grafo *grafo, string cidadeOrigem,
                     vector<int> *distancias, vector<string> *antecessores);

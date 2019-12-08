@@ -185,6 +185,16 @@ void print_reg(int RRN, struct registro *reg)
     endl;
 }
 
+//Retorna ponteiro para vertice dado o seu nome
+vertice *procura_vertice(string cidadeOrigem, grafo *grafo){
+    for(unsigned int i = 0; i<grafo->vertices.size(); i++){
+        if (grafo->vertices[i].cidadeOrigem.compare(cidadeOrigem) == 0){
+            return &(grafo->vertices[i]);
+        }
+    }
+    return NULL;
+}
+
 //tipo auxiliar para uso no Dijkstra
 //guarda vertice, distancia e antecessor
 typedef tuple<vertice*,int,string> vd;
@@ -217,7 +227,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
         //vetor nulo recebido
         return 1;
     } else if (cidadeOrigem.empty()){
-        //nome de origem vazio
+        //nome de origem vazio        
         return 2;
     }
 
@@ -225,6 +235,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
     map<string,vd> a_processar;
     set<vd, ordem_nome> processados;
 
+    bool origemValida = false;
     //Inicializa vertices a processar, junto com as distancias e antecessores
     for(unsigned int i = 0; i < grafo->vertices.size(); i++){
         vd v;
@@ -232,6 +243,7 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
         //A cidade de origem e inicializada com distancia 0
         if(grafo->vertices[i].cidadeOrigem == cidadeOrigem){
             v = vd(&(grafo->vertices[i]), 0, "");
+            origemValida = true;
         }
         //A cidade de destino e inicializaca com distancia infinita
         else {
@@ -240,6 +252,11 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
         //Insere na lista de vertices a processar
         nome_cidade = get<0>(v)->cidadeOrigem;
         a_processar.insert(vmap(nome_cidade,v));
+    }
+
+    //Verifica se cidade pedida foi encontrada
+    if(!origemValida){
+        return 3;
     }
     
     //Enquanto houverem vertices a processar
