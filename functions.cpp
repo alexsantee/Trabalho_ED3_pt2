@@ -73,6 +73,46 @@ void limpa_reg(struct registro *reg)
 }
 
 
+void insereNdirec(struct registro reg, struct grafo *grafo)
+{
+    int i = 0;
+    //Iterador percorre o vetor de vertices do grafo procurando por um vertice com a mesma cidade origem do reg
+    for(struct vertice v : grafo->vertices) 
+    {
+        if(v.cidadeOrigem == reg.cidadeOrigem)   //Compara cidade origem do reg com cidade origem do vertice
+        {                                                   //Se encontrou
+            struct aresta a;                                //Cria nova aresta e preenche com os dados do registro    
+            a.cidadeDestino = reg.cidadeDestino;
+            a.distancia = reg.distancia;
+            a.estadoDestino = reg.estadoDestino;
+            a.tempo = reg.tempoViagem;
+            grafo->vertices.at(i).arestas.push_back(a);     //insere aresta no vertice correspondente
+            sort(grafo->vertices.at(i).arestas.begin(), grafo->vertices.at(i).arestas.end());  //ordena vetor de arestas por ordem alfabética
+            return;
+        }
+        i++;
+    }
+
+    //Caso não encontre nenhum vertice de mesmo nome é necessario criar novo vertice
+    //Cria nova aresta e preenche com os dados do registro
+    struct aresta a;                   
+    a.cidadeDestino = reg.cidadeDestino;
+    a.distancia = reg.distancia;
+    a.estadoDestino = reg.estadoDestino;
+    a.tempo = reg.tempoViagem;
+    //Cria novo vertice e preenche com os dados do registro
+    struct vertice v;
+    v.cidadeOrigem = reg.cidadeOrigem;
+    v.estadoOrigem = reg.estadoOrigem;
+    //Insere aresta no vertice criado
+    v.arestas.push_back(a);
+    sort(v.arestas.begin(), v.arestas.end());
+    //Insere vertice no vetor de vertices do grafo
+    grafo->vertices.push_back(v);
+    sort(grafo->vertices.begin(), grafo->vertices.end());   //Ordena vetor de vertices do grafo
+}
+
+
 void inserenografo(struct registro reg, struct grafo * grafo)
 {
     int i = 0;
@@ -308,6 +348,7 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
 {
     struct registro reg;
     struct grafo *MST = new struct grafo;
+    struct vertice uant, vant;
     //B sao vertices da arvore minima e N sao todos os vertices
     set<vertice, ordem_V> B, N;
 
@@ -346,30 +387,90 @@ grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
                 {
                     //se vertice a adicionar nao esta na arvore considera adicao
                     if(B.find(u) == B.end())
-                    {    //se vertice novo eh menor substitui
+                    {
+                        //se vertice novo eh menor substitui
                         if(min > dist)
                         {
                             limpa_reg(&reg);
-                            if (isVLess(u,v))
-                            {
+                            //if (isVLess(u,v))
+                            //{
                                 strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
                                 strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
                                 strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
                                 strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
                                 strcpy(reg.tempoViagem, tempo);
                                 reg.distancia = dist;
-                            }else
-                            {
+                            /*}else
+                            {   PARTE DESNECESSÁRIA TAMBÉM
                                 strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
                                 strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
                                 strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
                                 strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
                                 strcpy(reg.tempoViagem, tempo);
                                 reg.distancia = dist;                    
-                            }
+                            }*/
                             n = u;
                             min = dist;
+                            uant = u;
+                            vant = v;
+                        }/*else{   APARENTEMENTE ESSA PARTE É DESNECESSARIA
+                        //Verifica se a distancia é igual ao minimo
+                        if(min == dist)
+                        {   //Em caso positivo, ve se o vertice u é menor q o selecionado anteriormente
+                            if(u < uant)
+                            {
+                                limpa_reg(&reg);
+                                if (isVLess(u,v))
+                                {
+                                    strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
+                                    strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
+                                    strcpy(reg.tempoViagem, tempo);
+                                    reg.distancia = dist;
+                                }else
+                                {
+                                    strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
+                                    strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
+                                    strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
+                                    strcpy(reg.tempoViagem, tempo);
+                                    reg.distancia = dist;                    
+                                }
+                                n = u;
+                                min = dist;
+                                uant = u;
+                                vant = v;
+                            }else{
+                                if(u.cidadeOrigem == uant.cidadeOrigem)
+                                    if(v < vant)
+                                    {
+                                        limpa_reg(&reg);
+                                        if (isVLess(u,v))
+                                        {
+                                            strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
+                                            strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
+                                            strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
+                                            strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
+                                            strcpy(reg.tempoViagem, tempo);
+                                            reg.distancia = dist;
+                                        }else
+                                        {
+                                            strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
+                                            strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
+                                            strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
+                                            strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
+                                            strcpy(reg.tempoViagem, tempo);
+                                            reg.distancia = dist;                    
+                                        }
+                                        n = u;
+                                        min = dist;
+                                        uant = u;
+                                        vant = v;
+                                    }
+                                }
                         }
+                        }*/  
                     }
                 }
             }

@@ -12,6 +12,8 @@ void limpa_reg(struct registro *reg);
 
 void inserenografo(struct registro reg, struct grafo * grafo);
 
+void insereNdirec(struct registro reg, struct grafo * grafo);
+
 void print_grafo(struct grafo grafo);
 
 void print_reg(int RRN, struct registro *reg);

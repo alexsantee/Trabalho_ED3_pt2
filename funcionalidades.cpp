@@ -99,5 +99,4 @@ void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struc
     MST = arvore_geradora(grafo, valorcampo);
     if(MST != NULL)
         print_grafo(*MST);
-    else{cout << "NULL" << endl;}
 }
