@@ -320,7 +320,7 @@ int arvore_geradora(struct grafo *grafo, string valorcampo, vector<int> *anteces
         (*antecessores)[it->second] = -1;  //origem nao tem antecessor
     }
     else{
-        cout << "Cidade inexistente." << endl;
+        //Cidade inexistente.
         return 1;
     }
 

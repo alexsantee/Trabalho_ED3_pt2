@@ -98,8 +98,14 @@ void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struc
     funcionalidade9(nomebin, grafo);
 
     vector<int> antecessores;
-    arvore_geradora(grafo, valorcampo, &antecessores);
-    for(int i : antecessores){
-    cout << i << endl;
+    int status;
+    status = arvore_geradora(grafo, valorcampo, &antecessores);
+    if(status == 0){
+        for(int i : antecessores){
+        cout << i << endl;
+        }
+    }
+    else{
+        cout << "Cidade inexistente." << endl;
     }
 }
