@@ -300,10 +300,14 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
 
 typedef pair<string,int> imap;
 
-int arvore_geradora(struct grafo *grafo, string valorcampo, vector<int> *antecessores)
+int arvore_geradora(struct grafo *grafo, string valorcampo, vector<vector<sucessor>> *sucessores)
 {
-    //Prepara retorno do vetor de antecessores
-    antecessores->resize(grafo->vertices.size());
+    //Prepara retorno do vetor de sucessores
+    sucessores->resize(grafo->vertices.size());
+    for(unsigned int i = 0; i < sucessores->size(); i++){
+        (*sucessores)[i].clear();
+    }
+
     //Mapa de indices do vetor de adjacencias <nome do vertice,indice no vetor>
     map<string,int> mapa_i;
     for(unsigned int i = 0; i < grafo->vertices.size(); i++){
@@ -317,7 +321,6 @@ int arvore_geradora(struct grafo *grafo, string valorcampo, vector<int> *anteces
     map<string,int>::iterator it = mapa_i.find(valorcampo);
     if(it != mapa_i.end()){   //cidade esta na lista
         B.insert(it->second);
-        (*antecessores)[it->second] = -1;  //origem nao tem antecessor
     }
     else{
         //Cidade inexistente.
@@ -326,30 +329,29 @@ int arvore_geradora(struct grafo *grafo, string valorcampo, vector<int> *anteces
 
     //Enquanto existem vertices fora da arvore insere mais
     while(B.size() < grafo->vertices.size()){
-        string tempo;
-        int dist;
-        int min = infinito;
+        //dados da menor aresta
+        string min_tempo;
+        int min_dist = infinito;
         int origem, destino;
         //para todo vertice da arvore atual
         for(int i : B){
             //procura menor aresta
             for(aresta a : grafo->vertices[i].arestas){
-                tempo = a.tempo;
-                dist = a.distancia;
                 //se vertice a adicionar nao esta na arvore considera adicao
                 if(B.find(mapa_i[a.cidadeDestino]) == B.end()){
                     //se aresta nova eh menor substitui
-                    if(dist < min){
+                    if(a.distancia < min_dist){
                         origem = i;
                         destino = mapa_i[a.cidadeDestino];
-                        min = dist;
+                        min_tempo = a.tempo;
+                        min_dist = a.distancia;
                     }
                 }
             }
         }
-        //insere vertice mais proximo na arvore
+        //insere vertice mais proximo na arvore e atualiza vetor de sucessores
         B.insert(destino);
-        (*antecessores)[destino] = origem;
+        (*sucessores)[origem].push_back(sucessor(destino, min_dist, min_tempo));
     }
 
     return 0;
