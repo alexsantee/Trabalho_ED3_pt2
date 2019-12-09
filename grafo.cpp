@@ -1,7 +1,4 @@
-#include <bits/stdc++.h>
 #include "grafo.h"
-
-using namespace std;
 
 //Verifica se cidade de origem vem primeiro em ordem alfabetica
 bool isVLess(struct vertice v1, struct vertice v2)

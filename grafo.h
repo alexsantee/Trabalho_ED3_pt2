@@ -1,7 +1,8 @@
 #ifndef GRAFO_H
 #define GRAFO_H
 
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
 
 using namespace std;
 

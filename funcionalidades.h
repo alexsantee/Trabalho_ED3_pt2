@@ -1,6 +1,7 @@
 #ifndef FUNCIONALIDADES_H
 #define FUNCIONALIDADES_H
-#include <bits/stdc++.h>
+
+#include <string>
 
 using namespace std;
 

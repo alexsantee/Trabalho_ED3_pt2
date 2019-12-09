@@ -1,9 +1,12 @@
-#include <bits/stdc++.h>
+#include <string>
+#include <iostream>
+
 #include "constants.h"
 #include "functions.h"
 #include "funcionalidades.h"
-#include "grafo.h"
 #include "helper.h"
+
+using namespace std;
 
 int main()
 {

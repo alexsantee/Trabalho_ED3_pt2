@@ -1,8 +1,11 @@
-#include <bits/stdc++.h>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 #include "constants.h"
 #include "functions.h"
 #include "funcionalidades.h"
-#include "grafo.h"
 
 using namespace std;
 

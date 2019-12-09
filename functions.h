@@ -1,7 +1,11 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include <bits/stdc++.h>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <tuple>
+#include <set>
 #include "grafo.h"
 
 using namespace std;
