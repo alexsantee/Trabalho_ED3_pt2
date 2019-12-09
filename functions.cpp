@@ -303,14 +303,13 @@ typedef pair<string,int> imap;
 int arvore_geradora(struct grafo *grafo, string valorcampo, vector<int> *antecessores)
 {
     //Prepara retorno do vetor de antecessores
-    antecessores->clear();
-    antecessores->reserve(grafo->vertices.size());
+    antecessores->resize(grafo->vertices.size());
     //Mapa de indices do vetor de adjacencias <nome do vertice,indice no vetor>
     map<string,int> mapa_i;
     for(unsigned int i = 0; i < grafo->vertices.size(); i++){
         mapa_i.insert( imap(grafo->vertices[i].cidadeOrigem, i) );
     }
-
+    
     //B sao vertices da arvore minima
     set<int> B;
 
@@ -321,7 +320,7 @@ int arvore_geradora(struct grafo *grafo, string valorcampo, vector<int> *anteces
         (*antecessores)[it->second] = -1;  //origem nao tem antecessor
     }
     else{
-        cout << "Cidade inexixstente." << endl;
+        cout << "Cidade inexistente." << endl;
         return 1;
     }
 
@@ -355,43 +354,3 @@ int arvore_geradora(struct grafo *grafo, string valorcampo, vector<int> *anteces
 
     return 0;
 }
-
-/*
-bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
-{   
-    if(a1.size() != a2.size())
-        return false;
-
-    bool achou = true;
-    for(vertice v : a1)
-    {
-        if(!achou)
-            return false;
-        achou = false;
-        for(vertice u : a2)
-        {
-            if(v.cidadeOrigem == u.cidadeOrigem)
-            {
-                achou = true;
-                break;
-            }
-        }
-    }
-
-    return true;
-}
-
-int isAdj(struct vertice v1, struct vertice v2, char * tempo)
-{
-    for(aresta a : v1.arestas)
-    {
-        if(a.cidadeDestino == v2.cidadeOrigem)
-        {
-            strcpy(tempo, a.tempo.c_str());
-            return a.distancia;
-        }
-    }
-
-    return -1;
-}
-*/
