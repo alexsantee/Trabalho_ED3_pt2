@@ -133,5 +133,4 @@ void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struc
     else if (status == 1){
         cout << "Cidade inexistente." << endl;
     }
-
 }
