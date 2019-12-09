@@ -245,12 +245,6 @@ struct ordem_nome{
     }
 };
 
-struct ordem_V{
-    bool operator() (vertice v1, vertice v2) const{
-        return (v1.cidadeOrigem < v2.cidadeOrigem);
-    }
-};
-
 //Para usar no mapa nomeOrigem->vertice
 typedef pair<string,vd> vmap;
 
@@ -344,178 +338,61 @@ int menor_caminho(struct grafo *grafo, string cidadeOrigem,
     return 0;
 }
 
-grafo * arvore_geradora(struct grafo *grafo, string valorcampo)
+typedef pair<string,int> imap;
+
+int arvore_geradora(struct grafo *grafo, string valorcampo, vector<vector<sucessor>> *sucessores)
 {
-    struct registro reg;
-    struct grafo *MST = new struct grafo;
-    struct vertice uant, vant;
-    //B sao vertices da arvore minima e N sao todos os vertices
-    set<vertice, ordem_V> B, N;
-
-    //inicializa os conjuntos B e N
-    for(vertice v : grafo->vertices)
-    {
-        //B comeca apenas com o vertice de origem
-        if(v.cidadeOrigem.compare(valorcampo) == 0)
-            B.insert(v);
-        //N contem todos os vertices
-        N.insert(v);
+    //Prepara retorno do vetor de sucessores
+    sucessores->resize(grafo->vertices.size());
+    for(unsigned int i = 0; i < sucessores->size(); i++){
+        (*sucessores)[i].clear();
     }
 
-    //se nao encontrou cidade de origem retorna erro
-    if(B.empty())
-    {
-        cout << "Cidade inexistente." << endl;
-        return NULL;
+    //Mapa de indices do vetor de adjacencias <nome do vertice,indice no vetor>
+    map<string,int> mapa_i;
+    for(unsigned int i = 0; i < grafo->vertices.size(); i++){
+        mapa_i.insert( imap(grafo->vertices[i].cidadeOrigem, i) );
+    }
+    
+    //B sao vertices da arvore minima
+    set<int> B;
+
+    //inicializa o conjunto B
+    map<string,int>::iterator it = mapa_i.find(valorcampo);
+    if(it != mapa_i.end()){   //cidade esta na lista
+        B.insert(it->second);
+    }
+    else{
+        //Cidade inexistente.
+        return 1;
     }
 
-    //Enquanto B nao possui todos os vertices adiciona mais
-    while(!isSetEqual(N,B))
-    {
-        int dist;
-        char tempo[TAM_VAR] = "";
-        int min = infinito;
-        struct vertice n;
-        //busca menor aresta de vertice da arvore para vertice fora
-        for(vertice v : B)
-        {
-            for(vertice u : grafo->vertices)
-            {
-                strcpy(tempo, "");
-                dist = isAdj(v, u, tempo);
-                if(dist != -1)
-                {
-                    //se vertice a adicionar nao esta na arvore considera adicao
-                    if(B.find(u) == B.end())
-                    {
-                        //se vertice novo eh menor substitui
-                        if(min > dist)
-                        {
-                            limpa_reg(&reg);
-                            //if (isVLess(u,v))
-                            //{
-                                strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
-                                strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
-                                strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
-                                strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
-                                strcpy(reg.tempoViagem, tempo);
-                                reg.distancia = dist;
-                            /*}else
-                            {   PARTE DESNECESSÁRIA TAMBÉM
-                                strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
-                                strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
-                                strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
-                                strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                strcpy(reg.tempoViagem, tempo);
-                                reg.distancia = dist;                    
-                            }*/
-                            n = u;
-                            min = dist;
-                            uant = u;
-                            vant = v;
-                        }/*else{   APARENTEMENTE ESSA PARTE É DESNECESSARIA
-                        //Verifica se a distancia é igual ao minimo
-                        if(min == dist)
-                        {   //Em caso positivo, ve se o vertice u é menor q o selecionado anteriormente
-                            if(u < uant)
-                            {
-                                limpa_reg(&reg);
-                                if (isVLess(u,v))
-                                {
-                                    strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
-                                    strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
-                                    strcpy(reg.tempoViagem, tempo);
-                                    reg.distancia = dist;
-                                }else
-                                {
-                                    strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
-                                    strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
-                                    strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                    strcpy(reg.tempoViagem, tempo);
-                                    reg.distancia = dist;                    
-                                }
-                                n = u;
-                                min = dist;
-                                uant = u;
-                                vant = v;
-                            }else{
-                                if(u.cidadeOrigem == uant.cidadeOrigem)
-                                    if(v < vant)
-                                    {
-                                        limpa_reg(&reg);
-                                        if (isVLess(u,v))
-                                        {
-                                            strcpy(reg.cidadeOrigem, u.cidadeOrigem.c_str());
-                                            strcpy(reg.estadoOrigem, u.estadoOrigem.c_str());
-                                            strcpy(reg.cidadeDestino, v.cidadeOrigem.c_str());
-                                            strcpy(reg.estadoDestino, v.estadoOrigem.c_str());
-                                            strcpy(reg.tempoViagem, tempo);
-                                            reg.distancia = dist;
-                                        }else
-                                        {
-                                            strcpy(reg.cidadeOrigem, v.cidadeOrigem.c_str());
-                                            strcpy(reg.estadoOrigem, v.estadoOrigem.c_str());
-                                            strcpy(reg.cidadeDestino, u.cidadeOrigem.c_str());
-                                            strcpy(reg.estadoDestino, u.estadoOrigem.c_str());
-                                            strcpy(reg.tempoViagem, tempo);
-                                            reg.distancia = dist;                    
-                                        }
-                                        n = u;
-                                        min = dist;
-                                        uant = u;
-                                        vant = v;
-                                    }
-                                }
-                        }
-                        }*/  
+    //Enquanto existem vertices fora da arvore insere mais
+    while(B.size() < grafo->vertices.size()){
+        //dados da menor aresta
+        string min_tempo;
+        int min_dist = infinito;
+        int origem, destino;
+        //para todo vertice da arvore atual
+        for(int i : B){
+            //procura menor aresta
+            for(aresta a : grafo->vertices[i].arestas){
+                //se vertice a adicionar nao esta na arvore considera adicao
+                if(B.find(mapa_i[a.cidadeDestino]) == B.end()){
+                    //se aresta nova eh menor substitui
+                    if(a.distancia < min_dist){
+                        origem = i;
+                        destino = mapa_i[a.cidadeDestino];
+                        min_tempo = a.tempo;
+                        min_dist = a.distancia;
                     }
                 }
             }
         }
-        //insere vertice mais proximo na arvore
-        B.insert(n);
-        inserenografo(reg, MST);
-    }
-    return MST;
-}
-
-bool isSetEqual(set<vertice, ordem_V> a1, set<vertice, ordem_V> a2)
-{   
-    if(a1.size() != a2.size())
-        return false;
-
-    bool achou = true;
-    for(vertice v : a1)
-    {
-        if(!achou)
-            return false;
-        achou = false;
-        for(vertice u : a2)
-        {
-            if(v.cidadeOrigem == u.cidadeOrigem)
-            {
-                achou = true;
-                break;
-            }
-        }
+        //insere vertice mais proximo na arvore e atualiza vetor de sucessores
+        B.insert(destino);
+        (*sucessores)[origem].push_back(sucessor(destino, min_dist, min_tempo));
     }
 
-    return true;
-}
-
-int isAdj(struct vertice v1, struct vertice v2, char * tempo)
-{
-    for(aresta a : v1.arestas)
-    {
-        if(a.cidadeDestino == v2.cidadeOrigem)
-        {
-            strcpy(tempo, a.tempo.c_str());
-            return a.distancia;
-        }
-    }
-
-    return -1;
+    return 0;
 }

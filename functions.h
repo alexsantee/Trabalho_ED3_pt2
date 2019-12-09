@@ -23,7 +23,10 @@ vertice *procura_vertice(string cidadeOrigem, grafo *grafo);
 int menor_caminho(struct grafo *grafo, string cidadeOrigem,
                     vector<int> *distancias, vector<string> *antecessores);
 
-grafo * arvore_geradora(struct grafo *grafo, string valorcampo);
+//trinca (destino, distancia, tempo)
+typedef tuple<int, int, string> sucessor;
+
+int arvore_geradora(struct grafo *grafo, string valorcampo, vector<vector<sucessor>> *sucessores);
 
 bool isSetEqual(set<struct vertice, struct ordem_V> a1, set<struct vertice, struct ordem_V> a2);
 

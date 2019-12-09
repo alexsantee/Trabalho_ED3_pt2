@@ -93,10 +93,44 @@ void funcionalidade10(string nomebin, string nomecampo, string valorcampo, struc
 }
 
 void funcionalidade11(string nomebin, string nomecampo, string valorcampo, struct grafo *grafo)
-{
-    struct grafo * MST;
+{   
+    //le grafo do arquivo
     funcionalidade9(nomebin, grafo);
-    MST = arvore_geradora(grafo, valorcampo);
-    if(MST != NULL)
-        print_grafo(*MST);
+
+    //encontra arvore geradora minima
+    vector<vector<sucessor>> sucessores;
+    int status;
+
+    //imprime resultado
+    status = arvore_geradora(grafo, valorcampo, &sucessores);
+    if(status == 0){
+        vertice* origem;
+        vertice* destino;
+        int dist;
+        string tempo;
+
+        //Para todo vetice do grafo
+        for(unsigned int i = 0; i < grafo->vertices.size(); i++){
+            //imprime cidade de origem
+            origem = &(grafo->vertices[i]);
+            cout << origem->cidadeOrigem << " " << origem->estadoOrigem;
+            //imprime destinos
+            sort(sucessores[i].begin(), sucessores[i].end()); //ordem alfabetica
+            for(sucessor s : sucessores[i]){
+                destino = &(grafo->vertices[get<0>(s)]);
+                dist = get<1>(s);
+                tempo = get<2>(s);
+                cout << " " << destino->cidadeOrigem << " " << destino->estadoOrigem << " " <<
+                        dist;
+                if(!tempo.empty()){
+                    cout << " " << tempo;
+                }
+            }
+            cout << endl;
+        }
+
+    }
+    else if (status == 1){
+        cout << "Cidade inexistente." << endl;
+    }
 }
